@@ -3,6 +3,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+
+import authRoutes from './routes/authRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import { notFound } from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 
@@ -23,9 +27,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Health Check Endpoint
-app.get('/api/v1/health', (req: Request, res: Response) => {
+app.get('/api/v1/health', (_req: Request, res: Response) => {
   res.status(200).json({ status: 'ok', message: 'TaskFlow API is running' });
 });
+
+// Feature API Routes
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/tasks', taskRoutes);
+app.use('/api/v1/dashboard', dashboardRoutes);
 
 // 404 & Centralized Error Handlers
 app.use(notFound);
